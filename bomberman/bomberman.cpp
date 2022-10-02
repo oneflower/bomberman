@@ -130,36 +130,6 @@ bool checkCanMove(int _x, int _y) {
     }
     return false;
 }
-void explosion(int _x, int _y) {
-    cells[_y][_x] = CELL_TYPE_EXPLOSION;
-    for (int j = 0; j < DIRECTION_MAX; j++) {
-        int x = _x;
-        int y = _y;
-        for (int i = 0; i < 2; i++) {
-            x += directions[j][0];
-            y += directions[j][1];
-            if (cells[y][x] == CELL_TYPE_HARD_BLOCK)
-                break;
-            else if (cells[y][x] == CELL_TYPE_SOFT_BLOCK) {
-                cells[y][x] = CELL_TYPE_EXPLOSION;
-                break;
-            }
-            else {
-                int monster = getMonster(x, y);
-                if (monster >= 1) {
-                    monsters[monster].isDead = true;
-                }
-                // bomb cont
-                int bomb = getBomb(x, y);
-                if (bomb >= 0) {
-                    bombs[bomb].count = 0;
-                    explosion(x, y);
-                }
-                cells[y][x] = CELL_TYPE_EXPLOSION;
-            }
-        }
-    }
-}
 
 int dtime = 180;
 int score = 100;
@@ -198,6 +168,40 @@ void gameOver() {
     printf("GAME OVER\n");
     _getch();
     exit(0);
+}
+
+void explosion(int _x, int _y) {
+    cells[_y][_x] = CELL_TYPE_EXPLOSION;
+    for (int j = 0; j < DIRECTION_MAX; j++) {
+        int x = _x;
+        int y = _y;
+        for (int i = 0; i < 2; i++) {
+            x += directions[j][0];
+            y += directions[j][1];
+            if (cells[y][x] == CELL_TYPE_HARD_BLOCK)
+                break;
+            else if (cells[y][x] == CELL_TYPE_SOFT_BLOCK) {
+                cells[y][x] = CELL_TYPE_EXPLOSION;
+                break;
+            }
+            else {
+                int monster = getMonster(x, y);
+                if (monster == 0) {
+                    gameOver();
+                }
+                else if (monster >= 1) {
+                    monsters[monster].isDead = true;
+                }
+                // bomb cont
+                int bomb = getBomb(x, y);
+                if (bomb >= 0) {
+                    bombs[bomb].count = 0;
+                    explosion(x, y);
+                }
+                cells[y][x] = CELL_TYPE_EXPLOSION;
+            }
+        }
+    }
 }
 
 int main() {
@@ -253,10 +257,6 @@ int main() {
                 }
             }
             break;
-        }
-
-        if (getMonster(x, y) > 0) {
-            //gameOver();
         }
 
         if (checkCanMove(x, y)) {
