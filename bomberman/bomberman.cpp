@@ -13,10 +13,10 @@ enum {
 };
 
 int directions[][2] = {
-    {0, 1},  // DIRECTION_NORTH,
-    {-1, 0}, // DIRECTION_WEST,
-    {0, -1}, // DIRECTION_SOUTH;
-    {1, 0}   // DIRECTION_EAST;
+    {0, -1},  // DIRECTION_NORTH,
+    {-1, 0},  // DIRECTION_WEST,
+    {0, 1},   // DIRECTION_SOUTH;
+    {1, 0}    // DIRECTION_EAST;
 };
 #define MAP_WIDTH 31
 #define MAP_HEIGHT 13
